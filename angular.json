@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "cvbot-web-client"
+    }
+  },
+  "defaultProject": "cvbot-web-client",
+  "cli": {
+    "analytics": false
+  }
 }
