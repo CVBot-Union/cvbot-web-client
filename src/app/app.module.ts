@@ -26,6 +26,8 @@ import {NzSpinModule} from 'ng-zorro-antd/spin';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import {NzResultModule} from 'ng-zorro-antd/result';
 import {NzTypographyModule} from 'ng-zorro-antd/typography';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 registerLocaleData(zh);
 
@@ -54,7 +56,8 @@ registerLocaleData(zh);
     NzButtonModule,
     NzSpinModule,
     NzResultModule,
-    NzTypographyModule
+    NzTypographyModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },

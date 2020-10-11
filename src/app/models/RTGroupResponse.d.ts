@@ -27,7 +27,17 @@ export interface RTGroupMeta {
   response: RTGroupMetaResponse;
 }
 export interface RTGroupMetaResponse {
+  group: RTGroupMetaGroup;
+  userKV?: (UserKVEntity)[] | null;
+}
+export interface RTGroupMetaGroup {
   property: RTGroupProperty;
   _id: string;
   name: string;
 }
+export interface UserKVEntity {
+  nickname: string;
+  _id: string;
+  id: string;
+}
+
