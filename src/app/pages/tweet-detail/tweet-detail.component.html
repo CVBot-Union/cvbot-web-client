@@ -1,8 +1,10 @@
 <nz-page-header (nzBack)="onBack()" nzBackIcon nzTitle="推文详细">
 </nz-page-header>
 <div nz-row *ngIf="!isTweetLoading">
-  <p>{{tweet.user.name}} <span nz-typography>({{tweet.userNickname.nickname}})</span></p>
-  <p>{{tweet.text}}</p>
+  <div nz-col>
+    <p>{{tweet.user.name}} <span nz-typography>({{tweet.userNickname.nickname}})</span></p>
+    <p>{{tweet.text}}</p>
+  </div>
 </div>
 
 <div nz-row>

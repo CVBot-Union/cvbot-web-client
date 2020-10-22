@@ -49,7 +49,7 @@ export class TweetDetailComponent implements OnInit {
     this.tweetService.getSingleTweet(groupID, tweetID)
       .subscribe(res => {
         this.tweet = res.response;
-        if (this.tweet.userNickname === null) {
+        if (this.tweet.userNickname === undefined) {
           this.messageService.warning('该关注不在本转推组');
           this.router.navigate(['home']);
           return;

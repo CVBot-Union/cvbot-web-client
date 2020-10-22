@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   loadMethod: 'ALL' | 'SINGLE' = 'ALL';
 
   page = 1;
-  limit = 10;
+  limit = 20;
 
   constructor(
     private rtgroupService: RtgroupService,

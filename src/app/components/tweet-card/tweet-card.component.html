@@ -1,5 +1,8 @@
 <div nz-row *ngIf="isFullUser">
-  <p>{{tweet.user.name}}</p>
-  <p>{{tweet.text}}</p>
-  <a routerLink="/tweet/{{tweet.id_str}}">查看更多</a>
+  <div nz-col>
+    <p>{{tweet.user.name}}</p>
+    <p>{{tweet.text}}</p>
+    <a routerLink="/tweet/{{tweet.id_str}}">查看更多</a>
+  </div>
 </div>
+<nz-divider></nz-divider>
