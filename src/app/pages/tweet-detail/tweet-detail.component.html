@@ -31,6 +31,10 @@
       <app-tweet-image-list
         *ngIf="tweet.extended_tweet.extended_entities.media[0].type === 'photo'"
         [mediaList]="tweet.extended_tweet.extended_entities.media"></app-tweet-image-list>
+      <app-video-player
+        *ngIf="tweet.extended_tweet.extended_entities.media[0].type === 'video'"
+        [options]="getPlayerOption(tweet.extended_tweet.extended_entities.media[0].id_str)"
+      ></app-video-player>
     </div>
   </div>
 
@@ -40,6 +44,10 @@
       <app-tweet-image-list
         *ngIf="tweet.extended_entities.media[0].type === 'photo'"
         [mediaList]="tweet.extended_entities.media"></app-tweet-image-list>
+      <app-video-player
+        *ngIf="tweet.extended_entities.media[0].type === 'video'"
+        [options]="getPlayerOption(tweet.extended_entities.media[0].id_str)"
+      ></app-video-player>
     </div>
   </div>
 
