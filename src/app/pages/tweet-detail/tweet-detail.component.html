@@ -1,1 +1,10 @@
-<p>tweet-detail works!</p>
+<nz-page-header (nzBack)="onBack()" nzBackIcon nzTitle="推文详细">
+</nz-page-header>
+<div nz-row *ngIf="!isTweetLoading">
+  <p>{{tweet.user.name}} <span nz-typography>({{tweet.userNickname.nickname}})</span></p>
+  <p>{{tweet.text}}</p>
+</div>
+
+<div nz-row>
+  <nz-spin nz-col nzPull="8" nzPush="8" nzSimple *ngIf="isTweetLoading" ></nz-spin>
+</div>

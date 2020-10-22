@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
         this.isAuthorizing = false;
         if (res.response.token) {
           localStorage.setItem('token', res.response.token);
-          this.router.navigate(['']);
+          window.location.replace('/home');
         }
       }, error => {
         this.isAuthorizing = false;

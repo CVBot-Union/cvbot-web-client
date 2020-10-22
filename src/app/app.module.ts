@@ -28,6 +28,16 @@ import {NzResultModule} from 'ng-zorro-antd/result';
 import {NzTypographyModule} from 'ng-zorro-antd/typography';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import {NzModalModule} from 'ng-zorro-antd/modal';
+import {NzSelectModule} from 'ng-zorro-antd/select';
+import { TrackerSelectComponent } from './components/tracker-select/tracker-select.component';
+import {NzEmptyModule} from 'ng-zorro-antd/empty';
+import {NzBackTopModule} from 'ng-zorro-antd/back-top';
+import {NzRadioModule} from 'ng-zorro-antd/radio';
+import {NzDividerModule} from 'ng-zorro-antd/divider';
+import { TweetCardComponent } from './components/tweet-card/tweet-card.component';
+import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 registerLocaleData(zh);
 
@@ -37,7 +47,9 @@ registerLocaleData(zh);
     LoginComponent,
     HomeComponent,
     TweetDetailComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    TrackerSelectComponent,
+    TweetCardComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +69,15 @@ registerLocaleData(zh);
     NzSpinModule,
     NzResultModule,
     NzTypographyModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    NzModalModule,
+    NzSelectModule,
+    NzEmptyModule,
+    NzBackTopModule,
+    NzRadioModule,
+    NzDividerModule,
+    NzPageHeaderModule,
+    InfiniteScrollModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },

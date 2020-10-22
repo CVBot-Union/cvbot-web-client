@@ -4,6 +4,9 @@ import {NzMessageService} from 'ng-zorro-antd/message';
 import {NavigationEnd, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import getChineseTimeGreeting from './utils/ChineseTimeGreeting';
+import {SlimRtgroupsEntity, UserResponse} from './models/UserResponse';
+import localStorageKey from './const/localStorageConst';
+import {GlobalMessageBusService} from './services/global-message-bus.service';
 
 @Component({
   selector: 'app-root',
@@ -15,18 +18,29 @@ export class AppComponent implements OnInit, OnDestroy{
   isCollapsed = true;
   isWholePageLinkActive = false;
   wholePageLink = ['/login', '/404'];
-  username = '用户';
+  userInfo: UserResponse;
   timeGreeting = getChineseTimeGreeting();
+  username = '';
+
+  rtgroupSelectModalOpts = {
+    isVisible: false,
+  };
+  currentGroup: string = localStorage.getItem(localStorageKey.CURRENT_GROUP);
+  selectedGroup: string = this.currentGroup;
 
   routerSub: Subscription;
+
+  isLoading = false;
 
   constructor(
     private router: Router,
     private userService: UserService,
     private messageService: NzMessageService,
-    private changeDetectRef: ChangeDetectorRef
+    private changeDetectRef: ChangeDetectorRef,
+    private globalMessageBusService: GlobalMessageBusService
   ) {
   }
+
 
   private subRouteChange = () => {
     this.routerSub = this.router.events.subscribe(event => {
@@ -46,20 +60,46 @@ export class AppComponent implements OnInit, OnDestroy{
       this.router.navigate(['login']);
       return;
     }
+    this.isLoading = true;
     this.userService.getCurrentUserDetail()
       .subscribe(res => {
+        this.userInfo = res.response;
         this.username = res.response.user.username;
+        if (this.currentGroup === null) {
+          this.currentGroup = res.response.rtgroups[0]._id;
+          localStorage.setItem(localStorageKey.CURRENT_GROUP, this.currentGroup);
+          this.globalMessageBusService.changeRTGroup(this.currentGroup);
+        }
+        this.isLoading = false;
       }, error => {
         this.messageService.error('获取登陆状态错误, 请登录');
-        if (error.status === 401 || error.status === 403){
-          this.router.navigate(['login']);
-        }
+        this.router.navigate(['login']);
+        this.isLoading = false;
       });
+  }
+
+  getCurrentRTGroup = (): SlimRtgroupsEntity => {
+    if (this.userInfo === undefined) {
+      return;
+    }
+    const groupIdx = this.userInfo.rtgroups.map(e => e._id).indexOf(this.currentGroup);
+    if (groupIdx === -1) {
+      this.messageService.error('选择的转推组不存在！');
+      return;
+    }
+    return this.userInfo.rtgroups[groupIdx];
   }
 
   onLogout = () => {
     localStorage.clear();
-    this.router.navigate(['auth', 'login']);
+    this.router.navigate(['login']);
+  }
+
+  onChangeRTGroupOK = () => {
+    localStorage.setItem(localStorageKey.CURRENT_GROUP, this.selectedGroup);
+    this.currentGroup = this.selectedGroup;
+    this.globalMessageBusService.changeRTGroup(this.currentGroup);
+    this.rtgroupSelectModalOpts.isVisible = false;
   }
 
   ngOnInit(): void {

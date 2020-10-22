@@ -1,1 +1,24 @@
-<p>home works!</p>
+<div nz-row *ngIf="!isLoading" style="align-items: center">
+  <span >关注选择: </span>
+  <app-tracker-select [trackerList]="groupProperty.userKV"
+                      [isSelectDisabled]="isTweetFeedLoading"
+                      (selectTrackerChange)="onTrackerChange($event)"></app-tracker-select>
+</div>
+<nz-divider></nz-divider>
+
+<div nz-row *ngIf="!isTweetFeedLoading">
+  <app-tweet-card
+    nz-col nzSm="24"
+    *ngFor="let tweet of tweets"
+    [tweet]="tweet"
+  ></app-tweet-card>
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="15"
+    (scrolled)="onScroll()"
+  ></div>
+</div>
+
+<nz-spin nzSimple *ngIf="isLoading || isTweetFeedLoading || isTweetPartialLoading"></nz-spin>
+<nz-empty *ngIf="tweets.length === 0 && !isTweetFeedLoading"></nz-empty>

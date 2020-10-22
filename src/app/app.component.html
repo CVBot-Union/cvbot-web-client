@@ -4,12 +4,14 @@
       <h1>转推工会</h1>
     </div>
     <span *ngIf="!isCollapsed" class="greeting" nz-typography>{{timeGreeting}}, {{username | slice:0:9}}</span>
+    <br>
+    <span *ngIf="!isCollapsed && (userInfo !== undefined)" class="greeting" nz-typography>当前组: {{getCurrentRTGroup().name}}</span>
     <ul nz-menu nzTheme="dark" nzMode="inline" *ngIf="!isWholePageLinkActive">
       <li nz-menu-item nzMatchRouter>
         <i nz-icon nzType="dashboard"></i>
         <a routerLink="/">首页</a>
       </li>
-      <li nz-menu-item>
+      <li nz-menu-item (click)="rtgroupSelectModalOpts.isVisible = true" >
         <i nz-icon nzType="team"></i>
         <a>切换转推组</a>
       </li>
@@ -25,3 +27,18 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+<nz-modal
+  *ngIf="!isLoading && (userInfo !== undefined)"
+  [(nzVisible)]="rtgroupSelectModalOpts.isVisible"
+  nzTitle="切换转推组"
+  (nzOnCancel)="rtgroupSelectModalOpts.isVisible = false"
+  (nzOnOk)="onChangeRTGroupOK()">
+  <nz-select
+             nzPlaceHolder="选择一个转推组"
+             [(ngModel)]="selectedGroup"
+            style="min-width: 100%">
+    <nz-option *ngFor="let group of userInfo.rtgroups"
+               [nzValue]="group._id" [nzLabel]="group.name"></nz-option>
+  </nz-select>
+</nz-modal>
+<nz-back-top></nz-back-top>

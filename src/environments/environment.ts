@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiBase: 'http://localhost:3000',
-  cdnBase: 'https://cvbot-union-asset.s3.amazonaws.com/'
+  cdnBase: 'https://cvbot-union-asset.s3.amazonaws.com'
 };
 
 /*

@@ -39,5 +39,6 @@ export interface UserKVEntity {
   nickname: string;
   _id: string;
   id: string;
+  uid: string;
 }
 

@@ -1,0 +1,10 @@
+<nz-radio-group [(ngModel)]="selectedTracker"
+                (ngModelChange)="onSelectTracker()"
+                [nzDisabled]="isSelectDisabled"
+                nzButtonStyle="solid">
+  <label nz-radio-button nzValue="ALL">全部</label>
+  <label
+    *ngFor="let tracker of trackerList"
+    nz-radio-button
+    [nzValue]="tracker.uid">{{tracker.nickname}}</label>
+</nz-radio-group>
