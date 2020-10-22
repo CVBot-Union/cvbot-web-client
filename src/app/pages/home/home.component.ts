@@ -113,7 +113,11 @@ export class HomeComponent implements OnInit {
 
   onScroll = () => {
     this.page++;
+    if (this.loadMethod === 'ALL') {
     this.getAllTweets(this.currentGroupId, true);
+    }else {
+      this.getTweetByUserId(this.currentGroupId, this.selectedTrackerFromList, true);
+    }
   }
 
 }

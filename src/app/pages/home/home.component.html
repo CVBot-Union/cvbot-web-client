@@ -15,10 +15,17 @@
   <div
     infiniteScroll
     [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="15"
+    [infiniteScrollThrottle]="30"
     (scrolled)="onScroll()"
   ></div>
 </div>
 
-<nz-spin nzSimple *ngIf="isLoading || isTweetFeedLoading || isTweetPartialLoading"></nz-spin>
+<div nz-row>
+  <nz-spin
+    style="padding: 25px;"
+    nzSimple
+    nz-col [nzPull]="12" [nzPush]="8"
+    *ngIf="isLoading || isTweetFeedLoading || isTweetPartialLoading"></nz-spin>
+</div>
+
 <nz-empty *ngIf="tweets.length === 0 && !isTweetFeedLoading"></nz-empty>

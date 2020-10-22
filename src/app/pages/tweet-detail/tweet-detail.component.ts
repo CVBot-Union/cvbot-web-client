@@ -5,6 +5,7 @@ import {NzMessageService} from 'ng-zorro-antd/message';
 import {TweetResponse} from '../../models/TweetResponse';
 import {GlobalMessageBusService} from '../../services/global-message-bus.service';
 import localStorageKey from '../../const/localStorageConst';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-tweet-detail',
@@ -14,11 +15,19 @@ import localStorageKey from '../../const/localStorageConst';
 export class TweetDetailComponent implements OnInit {
 
   tweet: TweetResponse;
+  cdnBase = environment.cdnBase;
 
   groupID = '';
   tweetID: string;
 
   isTweetLoading = true;
+
+  videoPlayerOption = {
+    fluid: false,
+    poster: '',
+    autoplay: false,
+    sources: [],
+  };
 
   constructor(
     private tweetService: TweetService,
@@ -64,6 +73,15 @@ export class TweetDetailComponent implements OnInit {
 
   onBack = () => {
     this.router.navigate(['home']);
+  }
+
+  getPlayerOption = (videoID: string) => {
+    this.videoPlayerOption.sources = [{
+      src: this.cdnBase + '/videos/' + videoID + '.mp4',
+      type: 'video/mp4'
+    }];
+    this.videoPlayerOption.poster = this.cdnBase + '/images/' + videoID + '.png';
+    return this.videoPlayerOption;
   }
 
 }

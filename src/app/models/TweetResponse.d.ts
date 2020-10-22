@@ -12,7 +12,9 @@ export interface SingleTweet {
 
 export interface TweetResponse extends Tweet{
   translations: Translation;
+  extended_tweet: Tweet | null;
   userNickname: UserNickNameEntity | null;
+  retweeted_status: TweetResponse;
   text: string;
 }
 

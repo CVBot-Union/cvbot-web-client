@@ -1,11 +1,78 @@
 <nz-page-header (nzBack)="onBack()" nzBackIcon nzTitle="推文详细">
 </nz-page-header>
-<div nz-row *ngIf="!isTweetLoading">
-  <div nz-col>
-    <p>{{tweet.user.name}} <span nz-typography>({{tweet.userNickname.nickname}})</span></p>
-    <p>{{tweet.text}}</p>
+<div class="tweet-detail" *ngIf="!isTweetLoading">
+  <div nz-row class="tweet-text">
+    <div nz-col>
+      <p>{{tweet.user.name}}
+        <span nz-typography>({{tweet.userNickname.nickname}})</span>
+        <span>{{tweet.created_at | date:"MM/dd/yy"}}</span>
+      </p>
+      <p *ngIf="!tweet.truncated" class="tweet-text">{{tweet.text}}</p>
+      <p *ngIf="tweet.truncated" class="tweet-text">{{tweet.extended_tweet.full_text}}</p>
+    </div>
   </div>
+
+  <nz-divider></nz-divider>
+
+  <div class="retweeted-text" nz-row *ngIf="tweet.retweeted_status">
+    <div nz-col>
+      <p>{{tweet.retweeted_status.user.name}}
+        <span>{{tweet.retweeted_status.created_at | date:"MM/dd/yy"}}</span>
+      </p>
+      <p *ngIf="!tweet.retweeted_status.truncated" class="tweet-text">{{tweet.retweeted_status.text}}</p>
+      <p *ngIf="tweet.retweeted_status.truncated" class="tweet-text">{{tweet.retweeted_status.extended_tweet.full_text}}</p>
+    </div>
+  </div>
+
+  <nz-divider *ngIf="tweet.retweeted_status"></nz-divider>
+
+  <div *ngIf="tweet.extended_tweet">
+    <div *ngIf="tweet.extended_tweet.extended_entities">
+      <app-tweet-image-list
+        *ngIf="tweet.extended_tweet.extended_entities.media[0].type === 'photo'"
+        [mediaList]="tweet.extended_tweet.extended_entities.media"></app-tweet-image-list>
+    </div>
+  </div>
+
+  <div class="media-list"
+       *ngIf="tweet.extended_entities">
+    <div *ngIf="tweet.extended_entities">
+      <app-tweet-image-list
+        *ngIf="tweet.extended_entities.media[0].type === 'photo'"
+        [mediaList]="tweet.extended_entities.media"></app-tweet-image-list>
+    </div>
+  </div>
+
+  <div class="rt-media-list"
+       *ngIf="tweet.retweeted_status">
+
+    <div *ngIf="tweet.retweeted_status.truncated">
+      <div class="rt-media-list"
+           *ngIf="tweet.retweeted_status.extended_tweet.extended_entities">
+        <app-tweet-image-list
+          *ngIf="tweet.retweeted_status.extended_tweet.extended_entities.media[0].type === 'photo'"
+          [mediaList]="tweet.retweeted_status.extended_tweet.extended_entities.media"></app-tweet-image-list>
+        <app-video-player
+          *ngIf="tweet.retweeted_status.extended_tweet.extended_entities.media[0].type === 'video'"
+          [options]="getPlayerOption(tweet.retweeted_status.extended_tweet.extended_entities.media[0].id_str)"
+        ></app-video-player>
+      </div>
+    </div>
+
+    <div *ngIf="tweet.retweeted_status.extended_tweet === null">
+      <app-tweet-image-list
+        *ngIf="tweet.retweeted_status.extended_entities.media[0].type === 'photo'"
+        [mediaList]="tweet.retweeted_status.extended_entities.media"></app-tweet-image-list>
+      <app-video-player
+        *ngIf="tweet.retweeted_status.extended_entities.media[0].type === 'video'"
+        [options]="getPlayerOption(tweet.retweeted_status.extended_entities.media[0].id_str)"
+      ></app-video-player>
+    </div>
+  </div>
+
 </div>
+
+
 
 <div nz-row>
   <nz-spin nz-col nzPull="8" nzPush="8" nzSimple *ngIf="isTweetLoading" ></nz-spin>

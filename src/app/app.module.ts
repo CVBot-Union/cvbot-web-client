@@ -38,6 +38,8 @@ import {NzDividerModule} from 'ng-zorro-antd/divider';
 import { TweetCardComponent } from './components/tweet-card/tweet-card.component';
 import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import { VideoPlayerComponent } from './components/video-player/video-player.component';
+import { TweetImageListComponent } from './components/tweet-image-list/tweet-image-list.component';
 
 registerLocaleData(zh);
 
@@ -49,7 +51,9 @@ registerLocaleData(zh);
     TweetDetailComponent,
     NotFoundComponent,
     TrackerSelectComponent,
-    TweetCardComponent
+    TweetCardComponent,
+    VideoPlayerComponent,
+    TweetImageListComponent
   ],
   imports: [
     BrowserModule,

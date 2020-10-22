@@ -1,0 +1,11 @@
+<div nz-row>
+  <img
+    nz-col
+    style="margin: 15px auto; "
+    nzMd="6" nzSm="24"
+    class="responsive-img"
+    *ngFor="let media of mediaList"
+    [src]="cdnBase + '/images/' + media.id_str + '.png'"
+    [alt]="media.media_url_https"
+  />
+</div>

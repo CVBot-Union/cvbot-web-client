@@ -1,8 +1,30 @@
 <div nz-row *ngIf="isFullUser">
   <div nz-col>
-    <p>{{tweet.user.name}}</p>
+    <p>{{tweet.user.name}} <span>{{tweet.created_at | date:"MM/dd/yy"}}</span></p>
     <p>{{tweet.text}}</p>
     <a routerLink="/tweet/{{tweet.id_str}}">查看更多</a>
+
+    <div>
+      <span *ngIf="tweet.extended_entities">
+      (有媒体文件)
+      </span>
+      <span *ngIf="tweet.truncated">
+        <span *ngIf="tweet.extended_tweet.extended_entities">
+          (有媒体文件)
+        </span>
+      </span>
+      <span *ngIf="tweet.retweeted_status">
+        <span *ngIf="tweet.retweeted_status.extended_entities">
+          (有转推媒体文件)
+        </span>
+              <span *ngIf="tweet.retweeted_status.truncated">
+        <span *ngIf="tweet.retweeted_status.extended_tweet.extended_entities">
+          (有转推媒体文件)
+        </span>
+       </span>
+      </span>
+    </div>
+
   </div>
 </div>
 <nz-divider></nz-divider>
