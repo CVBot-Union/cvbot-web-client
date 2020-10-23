@@ -27,14 +27,14 @@ export class ServiceWorkerService {
   private subscribeUpdate = (event: UpdateAvailableEvent) => {
     this.notificationService.info(
       '有新版本',
-      `Web App有新版本, 正在更新.... (版本: ${event.available})`);
+      `有新版本, 正在更新.... (版本Hash: ${event.available.hash.slice(0, 8)})`);
     setTimeout(() => {
       document.location.reload();
-    }, 3000);
+    }, 5000);
   }
 
   private subscribeUpgrade = (event: UpdateActivatedEvent) => {
-    this.notificationService.success('升级成功', `当前版本: ${event.current}`);
+    this.notificationService.success('升级成功', `当前版本Hash: ${event.current.hash.slice(0, 8)}`);
   }
 
   private pollingUpdate = (appRef: ApplicationRef, updates: SwUpdate) => {
