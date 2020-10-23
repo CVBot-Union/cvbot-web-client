@@ -40,6 +40,13 @@ import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
 import { TweetImageListComponent } from './components/tweet-image-list/tweet-image-list.component';
+import {NzAvatarModule} from 'ng-zorro-antd/avatar';
+import {NzSpaceModule} from 'ng-zorro-antd/space';
+import { RouterModule } from '@angular/router';
+import {NzNotificationServiceModule} from 'ng-zorro-antd/notification';
+import {ServiceWorkerService} from './services/service-worker.service';
+import {NzBadgeModule} from 'ng-zorro-antd/badge';
+import {NzTagModule} from 'ng-zorro-antd/tag';
 
 registerLocaleData(zh);
 
@@ -56,7 +63,7 @@ registerLocaleData(zh);
     TweetImageListComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({appId: 'serverApp'}),
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
@@ -81,11 +88,17 @@ registerLocaleData(zh);
     NzRadioModule,
     NzDividerModule,
     NzPageHeaderModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    NzAvatarModule,
+    NzSpaceModule,
+    NzNotificationServiceModule,
+    RouterModule,
+    NzTagModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },
     { provide: HTTP_INTERCEPTORS, useClass: HttpconfigInterceptor, multi: true},
+    ServiceWorkerService
   ],
   bootstrap: [AppComponent]
 })

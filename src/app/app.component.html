@@ -1,6 +1,7 @@
 <nz-layout class="layout">
-  <nz-sider nzCollapsible [nzCollapsed]="isCollapsed" nzBreakpoint="lg" [nzCollapsedWidth]="0">
+  <nz-sider nzCollapsible [nzCollapsed]="isCollapsed" nzBreakpoint="lg" [nzCollapsedWidth]="0" *ngIf="getCurrentRTGroup() !== undefined">
     <div class="logo">
+      <nz-avatar nzSize="large" [nzSrc]="getCurrentRTGroup().property.icon"></nz-avatar>
       <h1>转推工会</h1>
     </div>
     <span *ngIf="!isCollapsed" class="greeting" nz-typography>{{timeGreeting}}, {{username | slice:0:9}}</span>

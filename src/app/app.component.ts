@@ -7,6 +7,7 @@ import getChineseTimeGreeting from './utils/ChineseTimeGreeting';
 import {SlimRtgroupsEntity, UserResponse} from './models/UserResponse';
 import localStorageKey from './const/localStorageConst';
 import {GlobalMessageBusService} from './services/global-message-bus.service';
+import {ServiceWorkerService} from './services/service-worker.service';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit, OnDestroy{
     private userService: UserService,
     private messageService: NzMessageService,
     private changeDetectRef: ChangeDetectorRef,
-    private globalMessageBusService: GlobalMessageBusService
+    private globalMessageBusService: GlobalMessageBusService,
+    private sws: ServiceWorkerService
   ) {
   }
 
@@ -63,6 +65,11 @@ export class AppComponent implements OnInit, OnDestroy{
     this.isLoading = true;
     this.userService.getCurrentUserDetail()
       .subscribe(res => {
+        if (res.response.rtgroups.length === 0) {
+          this.messageService.warning('因为您不属于任何转推组,您将被登出.', { nzDuration: 8000 });
+          this.onLogout();
+          return;
+        }
         this.userInfo = res.response;
         this.username = res.response.user.username;
         if (this.currentGroup === null) {

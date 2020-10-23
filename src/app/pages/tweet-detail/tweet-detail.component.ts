@@ -16,6 +16,7 @@ export class TweetDetailComponent implements OnInit {
 
   tweet: TweetResponse;
   cdnBase = environment.cdnBase;
+  apiBase = environment.apiBase;
 
   groupID = '';
   tweetID: string;

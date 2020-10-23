@@ -6,6 +6,7 @@ import {NzMessageService} from 'ng-zorro-antd/message';
 import {GlobalMessageBusService} from '../../services/global-message-bus.service';
 import {TweetResponse} from '../../models/TweetResponse';
 import {TweetService} from '../../services/tweet.service';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +35,8 @@ export class HomeComponent implements OnInit {
     private rtgroupService: RtgroupService,
     private tweetService: TweetService,
     private messageService: NzMessageService,
-    private globalMessageBusService: GlobalMessageBusService
+    private globalMessageBusService: GlobalMessageBusService,
+    private route: ActivatedRoute
   ) { }
 
   private getGroupProperty = (id: string) => {
@@ -47,6 +49,7 @@ export class HomeComponent implements OnInit {
         this.isLoading = false;
         this.groupProperty = res.response;
       }, error => {
+        this.isLoading = false;
         this.messageService.error('无法加载转推组详情: ' + error.message);
       });
   }
@@ -56,6 +59,18 @@ export class HomeComponent implements OnInit {
     this.getGroupProperty(this.currentGroupId);
     this.globalMessageBusService.rtgroupChange$.subscribe(this.onRTGroupChange);
     this.getAllTweets(this.currentGroupId);
+    this.route.queryParamMap.subscribe(this.onQueryChange);
+  }
+
+  onQueryChange = (paramMap: ParamMap) => {
+    const loadMode = paramMap.get('mode');
+    const tracker = paramMap.get('tracker');
+    if (loadMode === 'ALL') {
+      this.loadMethod = loadMode;
+    }
+    if (tracker) {
+      this.selectedTrackerFromList = tracker;
+    }
   }
 
   onRTGroupChange = (changedId: string) => {
@@ -114,10 +129,23 @@ export class HomeComponent implements OnInit {
   onScroll = () => {
     this.page++;
     if (this.loadMethod === 'ALL') {
-    this.getAllTweets(this.currentGroupId, true);
+      this.getAllTweets(this.currentGroupId, true);
     }else {
       this.getTweetByUserId(this.currentGroupId, this.selectedTrackerFromList, true);
     }
+  }
+
+  private refreshPage = () => {
+    this.tweets = [];
+    if (this.loadMethod === 'ALL') {
+      this.getAllTweets(this.currentGroupId, false);
+    }else {
+      this.getTweetByUserId(this.currentGroupId, this.selectedTrackerFromList, false);
+    }
+  }
+
+  onRefresh = () => {
+    this.refreshPage();
   }
 
 }

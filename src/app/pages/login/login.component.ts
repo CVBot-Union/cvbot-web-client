@@ -58,10 +58,10 @@ export class LoginComponent implements OnInit {
     this.isAuthorizing = true;
     this.authService.login(username, password)
       .subscribe(res => {
-        this.isAuthorizing = false;
         if (res.response.token) {
           localStorage.setItem('token', res.response.token);
           window.location.replace('/home');
+          this.isAuthorizing = false;
         }
       }, error => {
         this.isAuthorizing = false;

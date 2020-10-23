@@ -1,11 +1,14 @@
 <nz-page-header (nzBack)="onBack()" nzBackIcon nzTitle="推文详细">
 </nz-page-header>
-<div class="tweet-detail" *ngIf="!isTweetLoading">
-  <div nz-row class="tweet-text">
+<div class="tweet-detail" *ngIf="!isTweetLoading" nz-row>
+  <div nz-row class="tweet-text" nz-col nzSm="24"
+       [nzMd]="{span: 18, offset: 4}">
     <div nz-col>
-      <p>{{tweet.user.name}}
-        <span nz-typography>({{tweet.userNickname.nickname}})</span>
-        <span>{{tweet.created_at | date:"MM/dd/yy"}}</span>
+      <p>
+        <nz-avatar nzSize="large" [nzSrc]="apiBase + '/lookup/avatar/id/' + tweet.user.id_str + '.png'"></nz-avatar>
+        <span class="username">{{tweet.user.name}}</span>
+        <span class="in-group-name">({{tweet.userNickname.nickname}})</span>
+        <span class="date">{{tweet.created_at | date:"MM/dd/yy"}}</span>
       </p>
       <p *ngIf="!tweet.truncated" class="tweet-text">{{tweet.text}}</p>
       <p *ngIf="tweet.truncated" class="tweet-text">{{tweet.extended_tweet.full_text}}</p>
@@ -14,10 +17,16 @@
 
   <nz-divider></nz-divider>
 
-  <div class="retweeted-text" nz-row *ngIf="tweet.retweeted_status">
+  <div class="retweeted-text"
+       nz-col
+       nzSm="24"
+       [nzMd]="{span: 18, offset: 4}"
+       nz-row *ngIf="tweet.retweeted_status">
     <div nz-col>
-      <p>{{tweet.retweeted_status.user.name}}
-        <span>{{tweet.retweeted_status.created_at | date:"MM/dd/yy"}}</span>
+      <p>
+        <nz-avatar nzSize="large" [nzSrc]="apiBase + '/lookup/avatar/id/' + tweet.retweeted_status.user.id_str + '.png'"></nz-avatar>
+        <span class="username">{{tweet.retweeted_status.user.name}}</span>
+        <span class="date">{{tweet.retweeted_status.created_at | date:"MM/dd/yy"}}</span>
       </p>
       <p *ngIf="!tweet.retweeted_status.truncated" class="tweet-text">{{tweet.retweeted_status.text}}</p>
       <p *ngIf="tweet.retweeted_status.truncated" class="tweet-text">{{tweet.retweeted_status.extended_tweet.full_text}}</p>
@@ -77,8 +86,9 @@
       ></app-video-player>
     </div>
   </div>
-
 </div>
+
+<nz-space></nz-space>
 
 
 
