@@ -138,9 +138,9 @@ export class HomeComponent implements OnInit {
   private refreshPage = () => {
     this.tweets = [];
     if (this.loadMethod === 'ALL') {
-      this.getAllTweets(this.currentGroupId, false);
+      this.getAllTweets(this.currentGroupId);
     }else {
-      this.getTweetByUserId(this.currentGroupId, this.selectedTrackerFromList, false);
+      this.getTweetByUserId(this.currentGroupId, this.selectedTrackerFromList);
     }
   }
 

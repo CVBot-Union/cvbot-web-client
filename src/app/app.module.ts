@@ -45,8 +45,8 @@ import {NzSpaceModule} from 'ng-zorro-antd/space';
 import { RouterModule } from '@angular/router';
 import {NzNotificationServiceModule} from 'ng-zorro-antd/notification';
 import {ServiceWorkerService} from './services/service-worker.service';
-import {NzBadgeModule} from 'ng-zorro-antd/badge';
 import {NzTagModule} from 'ng-zorro-antd/tag';
+import { SignupComponent } from './pages/signup/signup.component';
 
 registerLocaleData(zh);
 
@@ -60,7 +60,8 @@ registerLocaleData(zh);
     TrackerSelectComponent,
     TweetCardComponent,
     VideoPlayerComponent,
-    TweetImageListComponent
+    TweetImageListComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'serverApp'}),

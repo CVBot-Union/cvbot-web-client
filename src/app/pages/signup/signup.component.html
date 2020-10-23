@@ -1,9 +1,12 @@
 <div class="title-container">
-  <h2>转推工会登录</h2>
+  <h2>转推工会注册</h2>
 </div>
 
 <div nz-row>
   <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)" nz-col>
+    <h2>
+      请注意! 注册完成后没有任何转推组，请收到转推组邀请后登录。
+    </h2>
     <nz-form-item>
       <nz-form-control nzErrorTip="请输入用户名!">
         <nz-input-group nzPrefixIcon="user">
@@ -20,10 +23,11 @@
     </nz-form-item>
     <button nz-button
             [disabled]="validateForm.invalid || isAuthorizing"
-            class="login-form-button login-form-margin" [nzType]="'primary'">登录 <nz-spin nzSimple *ngIf="isAuthorizing"></nz-spin></button>
+            class="login-form-button login-form-margin"
+            [nzType]="'primary'">注册 <nz-spin nzSimple *ngIf="isAuthorizing"></nz-spin></button>
     <button nz-button
             class="login-form-button login-form-margin"
-            nzType="default" routerLink="/signup">注册</button>
+            nzType="default" routerLink="/login">登录</button>
   </form>
 </div>
 
