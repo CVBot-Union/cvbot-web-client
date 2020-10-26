@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import localStorageKey from '../const/localStorageConst';
 
 @Injectable()
 export class HttpconfigInterceptor implements HttpInterceptor {
@@ -15,7 +16,7 @@ export class HttpconfigInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token: string = localStorage.getItem('token');
+    const token: string = localStorage.getItem(localStorageKey.TOKEN);
 
     if (token) {
       request = request.clone({ headers: request.headers.set('Authorization', 'Bearer ' + token) });

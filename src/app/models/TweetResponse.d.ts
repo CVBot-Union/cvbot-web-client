@@ -1,4 +1,5 @@
 import { Status as Tweet } from 'twitter-d';
+import {TranslationEntity} from './TranslationResponse';
 
 export interface BatchTweets {
   success: boolean;
@@ -11,7 +12,7 @@ export interface SingleTweet {
 }
 
 export interface TweetResponse extends Tweet{
-  translations: Translation;
+  translations: TranslationEntity[];
   extended_tweet: Tweet | null;
   userNickname: UserNickNameEntity | null;
   retweeted_status: TweetResponse;

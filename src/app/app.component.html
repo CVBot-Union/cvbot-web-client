@@ -4,9 +4,11 @@
       <nz-avatar nzSize="large" [nzSrc]="getCurrentRTGroup().property.icon"></nz-avatar>
       <h1>转推工会</h1>
     </div>
-    <span *ngIf="!isCollapsed" class="greeting" nz-typography>{{timeGreeting}}, {{username | slice:0:9}}</span>
-    <br>
-    <span *ngIf="!isCollapsed && (userInfo !== undefined)" class="greeting" nz-typography>当前组: {{getCurrentRTGroup().name}}</span>
+    <div *ngIf="!isCollapsed && (userInfo !== undefined)">
+      <span class="greeting" nz-typography>{{timeGreeting}}, {{username | slice:0:9}}</span>
+      <br>
+      <span class="greeting" nz-typography>当前组: {{getCurrentRTGroup().name}}</span>
+    </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" *ngIf="!isWholePageLinkActive">
       <li nz-menu-item nzMatchRouter>
         <i nz-icon nzType="dashboard"></i>

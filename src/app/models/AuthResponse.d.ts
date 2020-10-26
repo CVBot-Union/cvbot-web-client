@@ -4,6 +4,7 @@ export interface AuthLogin {
 }
 export interface AuthLoginResponse {
   token: string;
+  uid: string;
 }
 
 interface AuthCreateResponseRootObject {

@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {BatchTweets, SingleTweet} from '../models/TweetResponse';
 import {environment} from '../../environments/environment';
+import {ExtendedTranslationResponse, TranslationResponse, UpdateTranslationObject} from '../models/TranslationResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,20 @@ export class TweetService {
     return this.http.get<SingleTweet>(environment.apiBase + '/tweet/' + tweetID, {
       params
     });
+  }
+
+  getTranslations = (tweetID: string): Observable<ExtendedTranslationResponse> => {
+    return this.http.get<ExtendedTranslationResponse>(environment.apiBase + '/tweet/' + tweetID + '/translations');
+  }
+
+  putNewTranslation = (tweetID: string, translationContent: string, sessionGroupID: string): Observable<UpdateTranslationObject> => {
+    return this.http.put<UpdateTranslationObject>(environment.apiBase + '/tweet/' + tweetID + '/translation', {
+      translationContent, sessionGroupID
+    });
+  }
+
+  deleteTranslation = (tweetID: string, translationID: string): Observable<UpdateTranslationObject> => {
+    return this.http.delete<UpdateTranslationObject>(environment.apiBase + '/tweet/' + tweetID +
+      '/translation/' + translationID);
   }
 }

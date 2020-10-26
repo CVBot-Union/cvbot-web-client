@@ -22,6 +22,7 @@
     "@angular/router": "~10.0.14",
     "@angular/service-worker": "~10.0.14",
     "ng-zorro-antd": "^10.0.0",
+    "ngx-clipboard": "^14.0.1",
     "ngx-infinite-scroll": "^9.1.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

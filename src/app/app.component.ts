@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   private getUserInfo = () => {
-    if (localStorage.getItem('token') === null) {
+    if (localStorage.getItem(localStorageKey.TOKEN) === null) {
       this.messageService.error('未登录, 请登录');
       this.router.navigate(['login']);
       return;

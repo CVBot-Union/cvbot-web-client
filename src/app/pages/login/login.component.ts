@@ -4,6 +4,7 @@ import {AuthService} from '../../services/auth.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import localStorageKey from '../../const/localStorageConst';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   private checkCurrentUserDetail = () => {
-    if (localStorage.getItem('token') === null) {
+    if (localStorage.getItem(localStorageKey.TOKEN) === null) {
       return;
     }
     this.isAuthorizing = true;
@@ -59,7 +60,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(username, password)
       .subscribe(res => {
         if (res.response.token) {
-          localStorage.setItem('token', res.response.token);
+          localStorage.setItem(localStorageKey.TOKEN, res.response.token);
+          localStorage.setItem(localStorageKey.CURRENT_USER_ID, res.response.uid);
           window.location.replace('/home');
           this.isAuthorizing = false;
         }

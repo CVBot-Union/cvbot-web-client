@@ -47,6 +47,11 @@ import {NzNotificationServiceModule} from 'ng-zorro-antd/notification';
 import {ServiceWorkerService} from './services/service-worker.service';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import { SignupComponent } from './pages/signup/signup.component';
+import {NzListModule} from 'ng-zorro-antd/list';
+import {NzCommentModule} from 'ng-zorro-antd/comment';
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
+import {NzPopconfirmModule} from 'ng-zorro-antd/popconfirm';
+import {ClipboardModule} from 'ngx-clipboard';
 
 registerLocaleData(zh);
 
@@ -94,7 +99,12 @@ registerLocaleData(zh);
     NzSpaceModule,
     NzNotificationServiceModule,
     RouterModule,
-    NzTagModule
+    NzTagModule,
+    NzListModule,
+    NzCommentModule,
+    NzToolTipModule,
+    NzPopconfirmModule,
+    ClipboardModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },

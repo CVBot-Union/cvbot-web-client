@@ -8,7 +8,7 @@
         <nz-avatar nzSize="large" [nzSrc]="apiBase + '/lookup/avatar/id/' + tweet.user.id_str + '.png'"></nz-avatar>
         <span class="username">{{tweet.user.name}}</span>
         <span class="in-group-name">({{tweet.userNickname.nickname}})</span>
-        <span class="date">{{tweet.created_at | date:"MM/dd/yy"}}</span>
+        <span class="date">{{tweet.created_at | date:"medium" : '+0900': 'zh' }}</span>
       </p>
       <p *ngIf="!tweet.truncated" class="tweet-text">{{tweet.text}}</p>
       <p *ngIf="tweet.truncated" class="tweet-text">{{tweet.extended_tweet.full_text}}</p>
@@ -26,7 +26,7 @@
       <p>
         <nz-avatar nzSize="large" [nzSrc]="apiBase + '/lookup/avatar/id/' + tweet.retweeted_status.user.id_str + '.png'"></nz-avatar>
         <span class="username">{{tweet.retweeted_status.user.name}}</span>
-        <span class="date">{{tweet.retweeted_status.created_at | date:"MM/dd/yy"}}</span>
+        <span class="date">{{tweet.retweeted_status.created_at | date:"medium" : '+0900': 'zh' }}</span>
       </p>
       <p *ngIf="!tweet.retweeted_status.truncated" class="tweet-text">{{tweet.retweeted_status.text}}</p>
       <p *ngIf="tweet.retweeted_status.truncated" class="tweet-text">{{tweet.retweeted_status.extended_tweet.full_text}}</p>
@@ -86,12 +86,64 @@
       ></app-video-player>
     </div>
   </div>
+
+  <nz-divider></nz-divider>
+
+  <div nz-col
+       nzSm="24"
+       [nzMd]="{span: 18, offset: 4}" class="translation-text">
+    <div nz-row>
+      <label for="translation-input">翻译录入</label>
+      <textarea rows="4" id="translation-input" nz-input [(ngModel)]="inputtedTranslation"></textarea>
+      <button nz-button nzType="primary" class="submit-btn"
+              (click)="onPostTranslation()"
+              [nzLoading]="isTranslationPosting"
+              [disabled]="inputtedTranslation.length === 0 || isTranslationLoading">提交</button>
+      <button nz-button nzType="primary" class="submit-btn"
+              nz-tooltip nzTooltipTitle="注意! 复制原文会删除所有的已经输入的翻译"
+              (click)="onCopyOriginalTweetToTranslationField()"
+              >复制原文</button>
+    </div>
+    <nz-spin
+      *ngIf="isTranslationLoading"
+      nz-col nzPull="8" nzPush="8" nzSimple ></nz-spin>
+    <div *ngIf="!isTranslationLoading">
+      <nz-comment
+        *ngFor="let translation of decodedTranslations"
+        [nzAuthor]="translation.author.name + '(' + translation.author.group + ')'"
+        nzDatetime="{{translation.createdAt | date: 'short': '0000': 'zh'}}"
+      >
+        <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+        <nz-comment-content>
+          <p>
+            {{translation.translationContent}}
+          </p>
+        </nz-comment-content>
+        <nz-comment-action>
+          <a *ngIf="translation.author.id === currentUserID"
+            nz-popconfirm
+            nzPopconfirmTitle="确定要删除这个翻译吗?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="onDeleteTranslation(translation._id)"
+            nz-icon nzType="delete-o" style="color:#f00;"></a>
+        </nz-comment-action>
+        <nz-comment-action>
+          <i nz-icon nzType="copy"
+             (cbOnSuccess)="onCopyTranslationSuccess()"
+             ngxClipboard [cbContent]="translation.translationContent"
+             nzTheme="outline"></i>
+        </nz-comment-action>
+      </nz-comment>
+    </div>
+    <div *ngIf="decodedTranslations.length === 0 && !(isTranslationLoading || isTranslationPosting)">
+      <h3>没有翻译提交译文</h3>
+    </div>
+  </div>
+
 </div>
 
 <nz-space></nz-space>
 
-
-
 <div nz-row>
-  <nz-spin nz-col nzPull="8" nzPush="8" nzSimple *ngIf="isTweetLoading" ></nz-spin>
+  <nz-spin nz-col nzPull="8" nzPush="8" nzSimple *ngIf="isTweetLoading"></nz-spin>
 </div>

@@ -1,7 +1,9 @@
 <div nz-row *ngIf="isFullUser">
   <div nz-col>
     <span>
-      <nz-avatar nzSize="large" [nzSrc]="apiBase + '/lookup/avatar/id/' + tweet.user.id_str + '.png'"></nz-avatar>
+      <nz-avatar nzSize="large"
+                 nzIcon="user"
+                 [nzSrc]="apiBase + '/lookup/avatar/id/' + tweet.user.id_str + '.png'"></nz-avatar>
       <span>
         <span class="username">
           {{tweet.user.name}}
@@ -10,9 +12,14 @@
           @{{tweet.user.screen_name}}
         </span>
       </span>
-      <span>{{tweet.created_at | date:"MM/dd/yy"}}</span>
+      <span>{{tweet.created_at | date:"medium" : '+0900': 'zh' }}</span>
     </span>
-    <nz-tag nzColor="geekblue" *ngIf="tweet.retweeted_status !== undefined">转推了</nz-tag>
+    <div>
+      <nz-tag nzColor="geekblue" *ngIf="tweet.retweeted_status !== undefined">转推了</nz-tag>
+      <nz-tag
+       [nzColor]="tweet.translations.length === 0 ? 'orange': 'cyan'"
+      >{{tweet.translations.length === 0 ? '没有翻译' : tweet.translations.length + '个翻译'}}</nz-tag>
+    </div>
     <p *ngIf="!tweet.truncated" class="tweet-text">{{tweet.text}}</p>
     <p *ngIf="tweet.truncated" class="tweet-text">{{tweet.extended_tweet.full_text}}</p>
     <a routerLink="/tweet/{{tweet.id_str}}">查看更多</a>

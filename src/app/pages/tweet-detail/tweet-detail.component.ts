@@ -6,6 +6,7 @@ import {TweetResponse} from '../../models/TweetResponse';
 import {GlobalMessageBusService} from '../../services/global-message-bus.service';
 import localStorageKey from '../../const/localStorageConst';
 import {environment} from '../../../environments/environment';
+import {ExtendedTranslationEntity, TranslationEntity} from '../../models/TranslationResponse';
 
 @Component({
   selector: 'app-tweet-detail',
@@ -20,8 +21,14 @@ export class TweetDetailComponent implements OnInit {
 
   groupID = '';
   tweetID: string;
+  currentUserID = localStorage.getItem(localStorageKey.CURRENT_USER_ID);
 
   isTweetLoading = true;
+  isTranslationLoading = true;
+  isTranslationPosting = false;
+
+  inputtedTranslation = '';
+  decodedTranslations: ExtendedTranslationEntity[] = [];
 
   videoPlayerOption = {
     fluid: false,
@@ -65,11 +72,84 @@ export class TweetDetailComponent implements OnInit {
           return;
         }
         this.isTweetLoading = false;
+        this.fetchTranslations(tweetID);
       }, error => {
         this.messageService.error('无法加载推文: ' + error.message);
         this.isTweetLoading = false;
         this.router.navigate(['404']);
       });
+  }
+
+  private fetchTranslations = (tweetID: string) => {
+    this.inputtedTranslation = '';
+    this.tweetService.getTranslations(tweetID)
+      .subscribe(res => {
+        this.decodedTranslations = res.response;
+        this.isTranslationLoading = false;
+      }, error => {
+        this.messageService.error('无法加载翻译: ' + error.message);
+        this.isTranslationLoading = false;
+      });
+  }
+
+  private postTranslations = (translationContent: string, tweetID: string) => {
+    this.isTranslationPosting = true;
+    this.tweetService.putNewTranslation(tweetID, translationContent, this.groupID)
+      .subscribe(res => {
+        this.isTranslationPosting = false;
+        if (res.response.nModified === 0) {
+          this.messageService.error('无法提交翻译');
+          return;
+        }
+        this.fetchTranslations(tweetID);
+      }, error => {
+        this.isTranslationPosting = false;
+        this.messageService.error('无法提交翻译: ' + error.message);
+      });
+  }
+
+  private deleteTranslation = (translationID: string, tweetID: string) => {
+    this.isTranslationLoading = true;
+    this.tweetService.deleteTranslation(tweetID, translationID)
+      .subscribe(res => {
+        this.isTranslationLoading = false;
+        if (res.response.nModified === 0) {
+          this.messageService.error('无法删除翻译');
+          return;
+        }
+        this.fetchTranslations(tweetID);
+      }, error => {
+        this.isTranslationLoading = false;
+        this.messageService.error('无法删除翻译: ' + error.message);
+      });
+  }
+
+  onPostTranslation = () => {
+    if (this.inputtedTranslation === this.getTweetText()) {
+      this.messageService.warning('翻译内容与原文相符');
+      return;
+    }
+    this.postTranslations(this.inputtedTranslation, this.tweet.id_str);
+  }
+
+  onDeleteTranslation = (id: string) => {
+    this.deleteTranslation(id, this.tweet.id_str);
+  }
+
+  onCopyTranslationSuccess = () => {
+    this.messageService.info('成功复制到粘贴板');
+  }
+
+  private getTweetText = (): string => {
+    if (this.tweet.truncated) {
+      return this.tweet.extended_tweet.full_text;
+    }else {
+      return this.tweet.text;
+    }
+  }
+
+  onCopyOriginalTweetToTranslationField = () => {
+    this.inputtedTranslation = this.getTweetText();
   }
 
   onBack = () => {
