@@ -2,12 +2,11 @@ export interface RTGroupDetail {
   success: boolean;
   response: RTGroupResponse;
 }
-
 export interface RTGroupResponse {
   property: RTGroupProperty;
   _id: string;
-  members?: (RTGroupMembersEntity)[] | null;
-  leaders?: (RTGroupMembersEntity)[] | null;
+  members: (RTGroupMembersEntity)[] | [];
+  trackers: (UserKVEntity)[] | [];
   name: string;
   __v: number;
 }
@@ -17,24 +16,11 @@ export interface RTGroupProperty {
   description: string;
 }
 export interface RTGroupMembersEntity {
-  dutyDescription: string;
-  _id: string;
   id: string;
+  username: string;
+  job: string;
 }
 
-export interface RTGroupMeta {
-  success: boolean;
-  response: RTGroupMetaResponse;
-}
-export interface RTGroupMetaResponse {
-  group: RTGroupMetaGroup;
-  userKV?: (UserKVEntity)[] | null;
-}
-export interface RTGroupMetaGroup {
-  property: RTGroupProperty;
-  _id: string;
-  name: string;
-}
 export interface UserKVEntity {
   nickname: string;
   _id: string;

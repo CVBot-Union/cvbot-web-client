@@ -1,28 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {RtgroupService} from '../../services/rtgroup.service';
 import localStorageKey from '../../const/localStorageConst';
-import {RTGroupMetaResponse} from '../../models/RTGroupResponse';
+import {RTGroupResponse} from '../../models/RTGroupResponse';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {GlobalMessageBusService} from '../../services/global-message-bus.service';
 import {TweetResponse} from '../../models/TweetResponse';
 import {TweetService} from '../../services/tweet.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
+import {interval} from 'rxjs';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+
+  @ViewChild('laggedNotificationTemplate', { static: false }) template?: TemplateRef<{ }>;
 
   currentGroupId = '';
 
-  groupProperty: RTGroupMetaResponse;
+  groupProperty: RTGroupResponse;
   selectedTrackerFromList = '';
 
   isLoading = true;
   isTweetFeedLoading = false;
   isTweetPartialLoading = false;
+
+  intervalObj = null;
 
   tweets: TweetResponse[] = [];
 
@@ -30,11 +36,14 @@ export class HomeComponent implements OnInit {
 
   page = 1;
   limit = 20;
+  refreshInterval = 20 * 1000;
+  lastLaggedCount = 0;
 
   constructor(
     private rtgroupService: RtgroupService,
     private tweetService: TweetService,
     private messageService: NzMessageService,
+    private notificationService: NzNotificationService,
     private globalMessageBusService: GlobalMessageBusService,
     private route: ActivatedRoute
   ) { }
@@ -44,7 +53,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    this.rtgroupService.getRTGroupMetaByID(id)
+    this.rtgroupService.getRTGroupByID(id)
       .subscribe(res => {
         this.isLoading = false;
         this.groupProperty = res.response;
@@ -60,6 +69,12 @@ export class HomeComponent implements OnInit {
     this.globalMessageBusService.rtgroupChange$.subscribe(this.onRTGroupChange);
     this.getAllTweets(this.currentGroupId);
     this.route.queryParamMap.subscribe(this.onQueryChange);
+    this.intervalObj = interval(this.refreshInterval)
+      .subscribe(this.triggerUpdateLaggedTimeline);
+  }
+
+  private triggerUpdateLaggedTimeline = () => {
+    this.checkLaggedTweet(this.tweets[0].id_str, this.currentGroupId);
   }
 
   onQueryChange = (paramMap: ParamMap) => {
@@ -135,6 +150,20 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  private checkLaggedTweet = (latestTweetID: string, groupID: string) => {
+    if (window.pageYOffset < 1500 || !document.hasFocus()) {
+      return;
+    }
+    this.tweetService.getTimelineLaggedTweetCount(latestTweetID, groupID)
+      .subscribe(res => {
+        if (res.response === this.lastLaggedCount) {
+          return;
+        }
+        this.lastLaggedCount = res.response;
+        this.notificationService.template(this.template);
+      });
+  }
+
   private refreshPage = () => {
     this.tweets = [];
     if (this.loadMethod === 'ALL') {
@@ -146,6 +175,12 @@ export class HomeComponent implements OnInit {
 
   onRefresh = () => {
     this.refreshPage();
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalObj !== null) {
+      this.intervalObj.unsubscribe();
+    }
   }
 
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {BatchTweets, SingleTweet} from '../models/TweetResponse';
+import {BatchTweets, SingleTweet, TimelineLaggedTweetCount} from '../models/TweetResponse';
 import {environment} from '../../environments/environment';
-import {ExtendedTranslationResponse, TranslationResponse, UpdateTranslationObject} from '../models/TranslationResponse';
+import {ExtendedTranslationResponse, UpdateTranslationObject} from '../models/TranslationResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +46,14 @@ export class TweetService {
   deleteTranslation = (tweetID: string, translationID: string): Observable<UpdateTranslationObject> => {
     return this.http.delete<UpdateTranslationObject>(environment.apiBase + '/tweet/' + tweetID +
       '/translation/' + translationID);
+  }
+
+  getTimelineLaggedTweetCount = (tweetID: string, groupID: string): Observable<TimelineLaggedTweetCount> => {
+    const params = new HttpParams()
+      .set('group', groupID)
+      .set('afterID', tweetID);
+    return this.http.get<TimelineLaggedTweetCount>(environment.apiBase + '/tweet/timeline-behind-count', {
+      params
+    });
   }
 }

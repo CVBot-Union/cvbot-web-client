@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <nz-divider></nz-divider>
+  <nz-divider *ngIf="tweet.retweeted_status"></nz-divider>
 
   <div nz-col
        nzSm="24"

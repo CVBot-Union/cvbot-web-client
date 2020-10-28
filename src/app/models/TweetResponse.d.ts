@@ -11,6 +11,11 @@ export interface SingleTweet {
   response: TweetResponse;
 }
 
+export interface TimelineLaggedTweetCount {
+  success: boolean;
+  response: number;
+}
+
 export interface TweetResponse extends Tweet{
   translations: TranslationEntity[];
   extended_tweet: Tweet | null;

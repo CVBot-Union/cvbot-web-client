@@ -1,5 +1,10 @@
 @import '~video.js/dist/video-js.min.css';
 
+html * {
+  font-family: source-han-sans-cjk-sc, source-han-sans-cjk-ja,
+  'Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji', 'Arial Unicode MS', Code2000, sans-serif;
+}
+
 .responsive-img {
   width: 100%;
   height: auto;
@@ -7,4 +12,24 @@
 
 .tweet-text {
   white-space: pre-line;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

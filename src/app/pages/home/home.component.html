@@ -1,6 +1,6 @@
 <div nz-row *ngIf="!isLoading" style="align-items: center; overflow-x: scroll">
   <span >关注选择: </span>
-  <app-tracker-select [trackerList]="groupProperty.userKV"
+  <app-tracker-select [trackerList]="groupProperty.trackers"
                       [isSelectDisabled]="isTweetFeedLoading"
                       (selectTrackerChange)="onTrackerChange($event)"></app-tracker-select>
 </div>
@@ -31,5 +31,21 @@
     nz-col [nzPull]="12" [nzPush]="8"
     *ngIf="isLoading || isTweetFeedLoading || isTweetPartialLoading"></nz-spin>
 </div>
+
+<ng-template #laggedNotificationTemplate let-notification>
+  <div class="ant-notification-notice-content">
+    <div>
+      <div class="ant-notification-notice-message">有新的推文</div>
+      <div class="ant-notification-notice-description">
+        自从上次刷新后有{{lastLaggedCount}}个新推文
+      </div>
+      <span class="ant-notification-notice-btn">
+            <button nz-button nzType="primary" nzSize="small" (click)="notification.close(); onRefresh()">
+              <span>刷新</span>
+            </button>
+          </span>
+    </div>
+  </div>
+</ng-template>
 
 <nz-empty *ngIf="tweets.length === 0 && !isTweetFeedLoading"></nz-empty>
