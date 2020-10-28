@@ -166,6 +166,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private refreshPage = () => {
     this.tweets = [];
+    this.lastLaggedCount = 0;
     if (this.loadMethod === 'ALL') {
       this.getAllTweets(this.currentGroupId);
     }else {
