@@ -52,6 +52,12 @@ import {NzCommentModule} from 'ng-zorro-antd/comment';
 import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
 import {NzPopconfirmModule} from 'ng-zorro-antd/popconfirm';
 import {ClipboardModule} from 'ngx-clipboard';
+import { RtgroupManageComponent } from './pages/rtgroup-manage/rtgroup-manage.component';
+import {LAZYLOAD_IMAGE_HOOKS, LazyLoadImageModule, ScrollHooks} from 'ng-lazyload-image';
+import {NzAlertModule} from 'ng-zorro-antd/alert';
+import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
+import {NzUploadModule} from 'ng-zorro-antd/upload';
+import {NzSkeletonModule} from 'ng-zorro-antd/skeleton';
 
 registerLocaleData(zh);
 
@@ -66,7 +72,8 @@ registerLocaleData(zh);
     TweetCardComponent,
     VideoPlayerComponent,
     TweetImageListComponent,
-    SignupComponent
+    SignupComponent,
+    RtgroupManageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'serverApp'}),
@@ -104,11 +111,17 @@ registerLocaleData(zh);
     NzCommentModule,
     NzToolTipModule,
     NzPopconfirmModule,
-    ClipboardModule
+    ClipboardModule,
+    LazyLoadImageModule,
+    NzAlertModule,
+    NzDescriptionsModule,
+    NzUploadModule,
+    NzSkeletonModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },
     { provide: HTTP_INTERCEPTORS, useClass: HttpconfigInterceptor, multi: true},
+    { provide: LAZYLOAD_IMAGE_HOOKS, useClass: ScrollHooks },
     ServiceWorkerService
   ],
   bootstrap: [AppComponent]

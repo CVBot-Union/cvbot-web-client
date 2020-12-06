@@ -1,0 +1,184 @@
+<nz-page-header class="site-page-header" nzTitle="转推组详细" nzSubtitle="">
+</nz-page-header>
+<nz-alert *ngIf="alertText !== ''" nzBanner nzType="error" style="margin-bottom: 12px" [nzMessage]="alertText" nzCloseable></nz-alert>
+
+<nz-descriptions nzBordered *ngIf="!isDetailLoading && !isGroupNotFound">
+  <nz-descriptions-item nzTitle="头像">
+    <nz-avatar nzShape="square" nzSize="large" nzIcon="user" [nzSrc]="rtGroupDetail.property.icon"></nz-avatar>
+    <nz-upload
+      id="upload-button"
+      nzAccept="image/png"
+      [nzShowUploadList]="false"
+      [nzDisabled]="isOkLoading"
+      [nzBeforeUpload]="onBeforeFileUpload"
+      nzSize="2048"
+      [nzAction]="iconUploadEndpoint"
+      nzName="icon"
+      [nzHeaders]="{ authorization: 'Bearer ' + authToken }"
+      (nzChange)="onFileUpload($event)"
+    >
+      <button nz-button><i nz-icon nzType="upload"></i>上传组头像 <span style="display: block">(2MB以内)</span></button>
+    </nz-upload>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="组名">
+    <div *ngIf="!infoEditing.name">
+      <span>{{rtGroupDetail.name}}</span>
+      <button class="edit-button" nz-button
+              (click)="infoEditing.name = !infoEditing.name"
+              nzType="default" nzShape="circle"><i nz-icon nzType="edit"></i></button>
+    </div>
+
+    <div *ngIf="infoEditing.name">
+      <input type="text" nz-input [(ngModel)]="rtGroupDetail.name">
+      <button nz-button
+              (click)="onChangeGroupInfo(); infoEditing.name = !infoEditing.name"
+              nzType="primary" nzShape="circle"><i nz-icon nzType="check"></i></button>
+      <button nz-button
+              (click)="infoEditing.name = !infoEditing.name"
+              nzType="default" nzShape="circle"><i nz-icon nzType="close"></i></button>
+    </div>
+
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="组织介绍" [nzSpan]="1">
+    <div *ngIf="!infoEditing.description">
+      <span>{{rtGroupDetail.property.description}}</span>
+      <button class="edit-button" nz-button
+              (click)="infoEditing.description = !infoEditing.description"
+              nzType="default" nzShape="circle"><i nz-icon nzType="edit"></i></button>
+    </div>
+    <div *ngIf="infoEditing.description">
+      <textarea style="resize: none" nz-input rows="4" [(ngModel)]="rtGroupDetail.property.description"></textarea>
+      <button nz-button
+              (click)="onChangeGroupInfo(); infoEditing.description = !infoEditing.description"
+              nzType="primary" nzShape="circle"><i nz-icon nzType="check"></i></button>
+      <button nz-button
+              (click)="infoEditing.description = !infoEditing.description"
+              nzType="default" nzShape="circle"><i nz-icon nzType="close"></i></button>
+    </div>
+  </nz-descriptions-item>
+</nz-descriptions>
+
+<nz-descriptions nzBordered *ngIf="!isDetailLoading && !isGroupNotFound">
+  <nz-descriptions-item nzTitle="推文模板" [nzSpan]="1">
+    <div *ngIf="!infoEditing.template">
+      <span>{{rtGroupDetail.property.templateFormat}}</span>
+      <button class="edit-button" nz-button
+              (click)="infoEditing.template = !infoEditing.template"
+              nzType="default" nzShape="circle"><i nz-icon nzType="edit"></i></button>
+    </div>
+    <div *ngIf="infoEditing.template">
+      <textarea style="resize: none" nz-input rows="4" [(ngModel)]="rtGroupDetail.property.templateFormat"></textarea>
+      <button nz-button
+              (click)="onChangeGroupInfo(); infoEditing.template = !infoEditing.template"
+              nzType="primary" nzShape="circle"><i nz-icon nzType="check"></i></button>
+      <button nz-button
+              (click)="infoEditing.template = !infoEditing.template"
+              nzType="default" nzShape="circle"><i nz-icon nzType="close"></i></button>
+    </div>
+  </nz-descriptions-item>
+</nz-descriptions>
+
+<nz-divider></nz-divider>
+
+<div nz-row *ngIf="!isDetailLoading" nzAlign="top" [nzGutter]="8">
+  <div nz-col nzLg="12" nzSm="24">
+    <nz-list nzBordered nzHeader="组员">
+      <nz-list-item *ngFor="let member of membersList">
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>
+            <span nz-typography>{{ member.username }}</span>
+
+          </nz-list-item-meta-title>
+          <nz-list-item-meta-description>
+            <span nz-typography>职务:{{ member.job }}</span>
+          </nz-list-item-meta-description>
+        </nz-list-item-meta>
+        <ul nz-list-item-actions>
+          <nz-list-item-action>
+            <button nz-button
+                    nz-popconfirm
+                    nzType="danger"
+                    (nzOnConfirm)="onRemoveMembers(member.id)"
+                    [nzPopconfirmTitle]="'确认移除' + member.username + '吗?'" >
+              <i nz-icon nzType="delete" nzTheme="outline"></i>
+              删除</button>
+          </nz-list-item-action>
+        </ul>
+      </nz-list-item>
+      <nz-list-item *ngIf="membersList.length === 0">
+        <nz-empty></nz-empty>
+      </nz-list-item>
+      <nz-list-footer>
+        <button nz-button (click)="onAddMembers()">添加组员</button>
+      </nz-list-footer>
+    </nz-list>
+  </div>
+  <div nz-col nzLg="12" nzSm="24">
+    <nz-list nzBordered nzHeader="组长">
+      <nz-list-item *ngFor="let leader of leadersList">
+        <span nz-typography>{{leader.username}}</span>
+        <ul nz-list-item-actions>
+          <nz-list-item-action>
+            <button nz-button
+                    *ngIf="leader.id !== currentUserID"
+                    nz-popconfirm
+                    nzType="danger"
+                    (nzOnConfirm)="onRemoveLeaders(leader.id)"
+                    [nzPopconfirmTitle]="'确认移除群' + leader.username + '吗?'" >
+              <i nz-icon nzType="delete" nzTheme="outline"></i>
+              删除</button>
+          </nz-list-item-action>
+        </ul>
+      </nz-list-item>
+      <nz-list-item *ngIf="leadersList.length === 0">
+        <nz-empty></nz-empty>
+      </nz-list-item>
+      <nz-list-footer>
+        <button nz-button (click)="onAddLeaders()">添加组长</button>
+      </nz-list-footer>
+    </nz-list>
+  </div>
+</div>
+
+<nz-skeleton [nzActive]="true" *ngIf="isDetailLoading" ></nz-skeleton>
+
+<nz-modal
+  [(nzVisible)]="isJoinMemberModalVisible"
+  nzTitle="添加新成员"
+  (nzOnCancel)="onDismissModal()"
+  (nzOnOk)="OkAddUsers()"
+  [nzOkDisabled]="selectedUser === '' || selectedJoinType === ''"
+  [nzCancelDisabled]="isCancelDisabled"
+  [nzOkLoading]="isOkLoading"
+>
+  <div nz-form>
+    <nz-form-item>
+      <nz-form-label>新成员类型</nz-form-label>
+      <nz-form-control>
+        <nz-select
+          nzPlaceHolder="请选择"
+          [(ngModel)]="selectedJoinType"
+        >
+          <nz-option *ngFor="let type of availableJoinType" [nzLabel]="type.label" [nzValue]="type.value"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>新成员</nz-form-label>
+      <nz-form-control>
+        <nz-select
+          nzPlaceHolder="请选择"
+          [(ngModel)]="selectedUser"
+        >
+          <nz-option *ngFor="let user of usersLists" [nzLabel]="user.username" [nzValue]="user._id"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>成员职务</nz-form-label>
+      <nz-form-control>
+        <input nz-input [(ngModel)]="userDutyDescription" placeholder="如：翻译" />
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</nz-modal>

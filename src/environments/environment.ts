@@ -2,9 +2,12 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import localStorageKey from '../app/const/localStorageConst';
+
 export const environment = {
   production: false,
-  apiBase: 'http://localhost:3000',
+  apiBase: localStorage.getItem(localStorageKey.PREFER_SERVER) === 'CHINA' ?
+  'http://china.localhost:3000' : 'http://localhost:3000',
   cdnBase: 'https://cvbot-union-asset.s3.amazonaws.com'
 };
 

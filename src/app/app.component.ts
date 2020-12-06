@@ -22,12 +22,26 @@ export class AppComponent implements OnInit, OnDestroy{
   userInfo: UserResponse;
   timeGreeting = getChineseTimeGreeting();
   username = '';
+  selectedServer = localStorage.getItem(localStorageKey.PREFER_SERVER);
 
   rtgroupSelectModalOpts = {
     isVisible: false,
   };
+
+  serverSelectModalOpts = {
+    isVisible: false,
+  };
   currentGroup: string = localStorage.getItem(localStorageKey.CURRENT_GROUP);
   selectedGroup: string = this.currentGroup;
+  isCurrentGroupManager = false;
+
+  availableServer = [{
+    val: 'DEFAULT',
+    name: '默认'
+  }, {
+    val: 'CHINA',
+    name: '大陆加速'
+  }];
 
   routerSub: Subscription;
 
@@ -74,9 +88,11 @@ export class AppComponent implements OnInit, OnDestroy{
         this.username = res.response.user.username;
         if (this.currentGroup === null) {
           this.currentGroup = res.response.rtgroups[0]._id;
+          this.isCurrentGroupManager = res.response.rtgroups[0].isManager;
           localStorage.setItem(localStorageKey.CURRENT_GROUP, this.currentGroup);
           this.globalMessageBusService.changeRTGroup(this.currentGroup);
         }
+        this.onChangeRTGroupOK();
         this.isLoading = false;
       }, error => {
         this.messageService.error('获取登陆状态错误, 请登录');
@@ -105,11 +121,27 @@ export class AppComponent implements OnInit, OnDestroy{
   onChangeRTGroupOK = () => {
     localStorage.setItem(localStorageKey.CURRENT_GROUP, this.selectedGroup);
     this.currentGroup = this.selectedGroup;
+    this.isCurrentGroupManager = this.getCurrentRTGroup().isManager;
     this.globalMessageBusService.changeRTGroup(this.currentGroup);
     this.rtgroupSelectModalOpts.isVisible = false;
   }
 
+  onChangeServerOK = () => {
+    localStorage.setItem(localStorageKey.PREFER_SERVER, this.selectedServer);
+    this.rtgroupSelectModalOpts.isVisible = false;
+    window.location.reload();
+  }
+
+  private setupApiServerPreference = () => {
+    const serverOption = localStorage.getItem(localStorageKey.PREFER_SERVER);
+    if (serverOption === null){
+      localStorage.setItem(localStorageKey.PREFER_SERVER, 'DEFAULT');
+      window.location.reload();
+    }
+  }
+
   ngOnInit(): void {
+    this.setupApiServerPreference();
     this.subRouteChange();
     this.getUserInfo();
     this.isCollapsed = true;

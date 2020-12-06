@@ -5,7 +5,7 @@ export interface RTGroupDetail {
 export interface RTGroupResponse {
   property: RTGroupProperty;
   _id: string;
-  members: (RTGroupMembersEntity)[] | [];
+  members: (RTGroupMembersEntity)[];
   trackers: (UserKVEntity)[] | [];
   name: string;
   __v: number;
@@ -14,11 +14,14 @@ export interface RTGroupProperty {
   themeColor: string;
   icon: string;
   description: string;
+  templateFormat: string;
 }
 export interface RTGroupMembersEntity {
   id: string;
+  _id: string;
   username: string;
   job: string;
+  isManager: boolean;
 }
 
 export interface UserKVEntity {

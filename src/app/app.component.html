@@ -18,6 +18,14 @@
         <i nz-icon nzType="team"></i>
         <a>切换转推组</a>
       </li>
+      <li nz-menu-item *ngIf="isCurrentGroupManager">
+        <i nz-icon nzType="setting" nzTheme="outline"></i>
+        <a [routerLink]="['rtgroup-manage']">转推组管理</a>
+      </li>
+      <li nz-menu-item (click)="serverSelectModalOpts.isVisible = true" >
+        <i nz-icon nzType="cloud-server" nzTheme="outline"></i>
+        <a>切换服务器</a>
+      </li>
       <li nz-menu-item (click)="onLogout()" >
         <i nz-icon nzType="poweroff" nzTheme="outline" style="color: orangered"></i>
         <a *ngIf="!isCollapsed" >注销</a>
@@ -42,6 +50,20 @@
             style="min-width: 100%">
     <nz-option *ngFor="let group of userInfo.rtgroups"
                [nzValue]="group._id" [nzLabel]="group.name"></nz-option>
+  </nz-select>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="serverSelectModalOpts.isVisible"
+  nzTitle="切换服务器"
+  (nzOnCancel)="serverSelectModalOpts.isVisible = false"
+  (nzOnOk)="onChangeServerOK()">
+  <nz-select
+    nzPlaceHolder="选择一个服务器"
+    [(ngModel)]="selectedServer"
+    style="min-width: 100%">
+    <nz-option *ngFor="let server of availableServer"
+               [nzValue]="server.val" [nzLabel]="server.name"></nz-option>
   </nz-select>
 </nz-modal>
 <nz-back-top></nz-back-top>

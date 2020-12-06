@@ -23,7 +23,7 @@
     <p *ngIf="!tweet.truncated" class="tweet-text">{{tweet.text}}</p>
     <p *ngIf="tweet.truncated" class="tweet-text">{{tweet.extended_tweet.full_text}}</p>
     <a routerLink="/tweet/{{tweet.id_str}}">查看更多</a>
-
+    <!--todo: lazy load image-->
   </div>
 </div>
 <nz-divider></nz-divider>
