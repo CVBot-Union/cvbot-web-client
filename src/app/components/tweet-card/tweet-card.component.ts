@@ -13,11 +13,29 @@ export class TweetCardComponent implements OnInit {
   isFullUser = false;
   apiBase = environment.apiBase;
 
+  videoPlayerOption = {
+    fluid: false,
+    poster: '',
+    autoplay: false,
+    sources: [],
+  };
+
+  cdnBase = environment.cdnBase;
+
   @Input() tweet: TweetResponse;
   constructor() { }
 
   ngOnInit(): void {
     this.isFullUser = isFullUser(this.tweet.user);
+  }
+
+  getPlayerOption = (videoID: string) => {
+    this.videoPlayerOption.sources = [{
+      src: this.cdnBase + '/videos/' + videoID + '.mp4',
+      type: 'video/mp4'
+    }];
+    this.videoPlayerOption.poster = this.cdnBase + '/images/' + videoID + '.png';
+    return this.videoPlayerOption;
   }
 
 }

@@ -23,7 +23,60 @@
     <p *ngIf="!tweet.truncated" class="tweet-text">{{tweet.text}}</p>
     <p *ngIf="tweet.truncated" class="tweet-text">{{tweet.extended_tweet.full_text}}</p>
     <a routerLink="/tweet/{{tweet.id_str}}">查看更多</a>
-    <!--todo: lazy load image-->
+
+    <div>
+      <div *ngIf="tweet.extended_tweet">
+        <div *ngIf="tweet.extended_tweet.extended_entities">
+          <app-tweet-image-list
+            *ngIf="tweet.extended_tweet.extended_entities.media[0].type === 'photo'"
+            [mediaList]="tweet.extended_tweet.extended_entities.media"></app-tweet-image-list>
+          <app-video-player
+            *ngIf="tweet.extended_tweet.extended_entities.media[0].type === 'video'"
+            [options]="getPlayerOption(tweet.extended_tweet.extended_entities.media[0].id_str)"
+          ></app-video-player>
+        </div>
+      </div>
+
+      <div class="media-list"
+           *ngIf="tweet.extended_entities">
+        <div *ngIf="tweet.extended_entities">
+          <app-tweet-image-list
+            *ngIf="tweet.extended_entities.media[0].type === 'photo'"
+            [mediaList]="tweet.extended_entities.media"></app-tweet-image-list>
+          <app-video-player
+            *ngIf="tweet.extended_entities.media[0].type === 'video'"
+            [options]="getPlayerOption(tweet.extended_entities.media[0].id_str)"
+          ></app-video-player>
+        </div>
+      </div>
+
+      <div class="rt-media-list"
+           *ngIf="tweet.retweeted_status">
+
+        <div *ngIf="tweet.retweeted_status.truncated">
+          <div class="rt-media-list"
+               *ngIf="tweet.retweeted_status.extended_tweet.extended_entities">
+            <app-tweet-image-list
+              *ngIf="tweet.retweeted_status.extended_tweet.extended_entities.media[0].type === 'photo'"
+              [mediaList]="tweet.retweeted_status.extended_tweet.extended_entities.media"></app-tweet-image-list>
+            <app-video-player
+              *ngIf="tweet.retweeted_status.extended_tweet.extended_entities.media[0].type === 'video'"
+              [options]="getPlayerOption(tweet.retweeted_status.extended_tweet.extended_entities.media[0].id_str)"
+            ></app-video-player>
+          </div>
+        </div>
+
+        <div *ngIf="tweet.retweeted_status.extended_tweet === null">
+          <app-tweet-image-list
+            *ngIf="tweet.retweeted_status.extended_entities.media[0].type === 'photo'"
+            [mediaList]="tweet.retweeted_status.extended_entities.media"></app-tweet-image-list>
+          <app-video-player
+            *ngIf="tweet.retweeted_status.extended_entities.media[0].type === 'video'"
+            [options]="getPlayerOption(tweet.retweeted_status.extended_entities.media[0].id_str)"
+          ></app-video-player>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <nz-divider></nz-divider>

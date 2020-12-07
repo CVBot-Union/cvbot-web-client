@@ -1,0 +1,11 @@
+.img-container{
+  max-height: 30vh;
+  max-width: 100% !important;
+  overflow:hidden; /*hide bounds of image */
+  margin:0;   /*reset margin of figure tag*/
+}
+
+.img-container img{
+  display:block; /*remove inline-block spaces*/
+  width:100%; /*make image streatch*/
+}

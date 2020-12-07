@@ -92,7 +92,6 @@ export class AppComponent implements OnInit, OnDestroy{
           localStorage.setItem(localStorageKey.CURRENT_GROUP, this.currentGroup);
           this.globalMessageBusService.changeRTGroup(this.currentGroup);
         }
-        this.onChangeRTGroupOK();
         this.isLoading = false;
       }, error => {
         this.messageService.error('获取登陆状态错误, 请登录');

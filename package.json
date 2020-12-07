@@ -25,6 +25,7 @@
     "ng-zorro-antd": "^10.0.0",
     "ngx-clipboard": "^14.0.1",
     "ngx-infinite-scroll": "^9.1.0",
+    "ngx-lightbox": "^2.2.2",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "video.js": "^7.9.7",

@@ -58,6 +58,7 @@ import {NzAlertModule} from 'ng-zorro-antd/alert';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzUploadModule} from 'ng-zorro-antd/upload';
 import {NzSkeletonModule} from 'ng-zorro-antd/skeleton';
+import {LightboxModule} from 'ngx-lightbox';
 
 registerLocaleData(zh);
 
@@ -116,7 +117,8 @@ registerLocaleData(zh);
     NzAlertModule,
     NzDescriptionsModule,
     NzUploadModule,
-    NzSkeletonModule
+    NzSkeletonModule,
+    LightboxModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },
